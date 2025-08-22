@@ -1,0 +1,702 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WEPLUS Partner Dashboard</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #333;
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            text-align: center;
+            color: white;
+            margin-bottom: 30px;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .header p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+
+        .card {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 25px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.08);
+        }
+
+        .login-section {
+            max-width: 400px;
+            margin: 0 auto;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: #374151;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e5e7eb;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: border-color 0.3s ease;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: #4f46e5;
+        }
+
+        .btn {
+            width: 100%;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+            text-align: center;
+        }
+
+        .btn-primary {
+            background: #4f46e5;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #3730a3;
+        }
+
+        .btn-secondary {
+            background: #6b7280;
+            color: white;
+            margin-top: 10px;
+        }
+
+        .btn-success {
+            background: #10b981;
+            color: white;
+            margin-top: 10px;
+        }
+
+        .alert {
+            padding: 15px 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            font-weight: 500;
+        }
+
+        .alert-success {
+            background: rgba(16, 185, 129, 0.1);
+            color: #10b981;
+            border: 1px solid rgba(16, 185, 129, 0.2);
+        }
+
+        .alert-error {
+            background: rgba(239, 68, 68, 0.1);
+            color: #ef4444;
+            border: 1px solid rgba(239, 68, 68, 0.2);
+        }
+
+        .filters {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            align-items: end;
+            margin-bottom: 20px;
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        .stat-card {
+            background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 12px;
+            text-align: center;
+        }
+
+        .stat-card.green {
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+        }
+
+        .stat-card.orange {
+            background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+        }
+
+        .stat-card.purple {
+            background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);
+        }
+
+        .stat-value {
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+
+        .table-container {
+            overflow-x: auto;
+            border-radius: 12px;
+            border: 1px solid #e5e7eb;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+        }
+
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        th {
+            background: #f8fafc;
+            font-weight: 600;
+            color: #374151;
+            position: sticky;
+            top: 0;
+        }
+
+        tr:hover {
+            background: rgba(79, 70, 229, 0.05);
+        }
+
+        .amount {
+            text-align: right;
+            font-weight: 600;
+            color: #10b981;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: #6b7280;
+        }
+
+        .welcome-user {
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            color: white;
+            padding: 15px 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+
+        .last-update {
+            font-size: 0.9rem;
+            opacity: 0.9;
+            margin-top: 5px;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 10px;
+            }
+            
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .stats {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .filters {
+                grid-template-columns: 1fr;
+            }
+            
+            th, td {
+                padding: 8px 4px;
+                font-size: 0.9rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <h1>WEPLUS Partner</h1>
+            <p>Commission Dashboard</p>
+        </div>
+
+        <!-- Login Section -->
+        <div id="loginSection" class="card">
+            <div class="login-section">
+                <h2 style="text-align: center; margin-bottom: 20px; color: #4f46e5;">Partner Login</h2>
+                
+                <form id="loginForm">
+                    <div class="form-group">
+                        <label for="username">Username:</label>
+                        <input type="text" id="username" class="form-control" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="password">Password:</label>
+                        <input type="password" id="password" class="form-control" required>
+                    </div>
+                    
+                    <button type="submit" class="btn btn-primary">Login</button>
+                </form>
+
+                <div style="margin-top: 20px; padding: 15px; background: #fef3c7; border-radius: 8px; text-align: center;">
+                    <p style="margin: 0; color: #92400e; font-weight: 600;">Test Credentials:</p>
+                    <p style="margin: 5px 0 0 0; color: #92400e;">Username: krufernweplus</p>
+                    <p style="margin: 0; color: #92400e;">Password: KrufernWP2025123</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Dashboard Section -->
+        <div id="dashboardSection" class="hidden">
+            <!-- Welcome -->
+            <div class="welcome-user">
+                <div style="font-size: 1.2rem; font-weight: 600;">Welcome <span id="welcomeUser"></span></div>
+                <div class="last-update">Last update: <span id="lastUpdate"></span></div>
+            </div>
+
+            <!-- Date Filter -->
+            <div class="card">
+                <h2>Date Filter</h2>
+                <div class="filters">
+                    <div class="form-group">
+                        <label for="fromDate">From:</label>
+                        <input type="date" id="fromDate" class="form-control">
+                    </div>
+                    <div class="form-group">
+                        <label for="toDate">To:</label>
+                        <input type="date" id="toDate" class="form-control">
+                    </div>
+                    <div class="form-group">
+                        <button class="btn btn-primary" onclick="applyFilter()">Apply Filter</button>
+                    </div>
+                    <div class="form-group">
+                        <button class="btn btn-secondary" onclick="clearFilter()">Refresh</button>
+                    </div>
+                    <div class="form-group">
+                        <button class="btn btn-success" onclick="exportCSV()">Export CSV</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Commission Summary -->
+            <div class="card">
+                <h2>Commission Summary</h2>
+                <div class="stats">
+                    <div class="stat-card orange">
+                        <div class="stat-value" id="totalCommission">฿0</div>
+                        <div class="stat-label">Total Commission</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value" id="affiliate10">฿0</div>
+                        <div class="stat-label">Affiliate 10%</div>
+                    </div>
+                    <div class="stat-card green">
+                        <div class="stat-value" id="invitor15">฿0</div>
+                        <div class="stat-label">Invitor 1.5%</div>
+                    </div>
+                    <div class="stat-card purple">
+                        <div class="stat-value" id="totalRecords">0</div>
+                        <div class="stat-label">Total Records</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Commission Table -->
+            <div class="card">
+                <h2>Commission Details</h2>
+                <div id="tableLoading" class="loading">Loading commission data...</div>
+                <div id="tableContent" class="hidden">
+                    <div class="table-container">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Date</th>
+                                    <th>Course Name</th>
+                                    <th>Customer Payment</th>
+                                    <th>Commission Type</th>
+                                    <th>Code</th>
+                                    <th>Commission Amount</th>
+                                    <th>Order No</th>
+                                </tr>
+                            </thead>
+                            <tbody id="commissionTableBody">
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div id="noDataMessage" class="hidden" style="text-align: center; padding: 40px; color: #6b7280;">
+                    No commission data found for the selected period.
+                </div>
+            </div>
+
+            <!-- Logout -->
+            <div style="text-align: center; margin-top: 30px;">
+                <button class="btn btn-secondary" onclick="logout()" style="width: auto; min-width: 200px;">Logout</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Global variables
+        const API_URL = 'https://weplus-api-production.up.railway.app';
+        let currentUser = '';
+        let commissionData = [];
+        let filteredData = [];
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            setupEventListeners();
+            checkExistingLogin();
+            setDefaultDates();
+        });
+
+        function setupEventListeners() {
+            document.getElementById('loginForm').addEventListener('submit', handleLogin);
+        }
+
+        function setDefaultDates() {
+            const today = new Date();
+            const oneMonthAgo = new Date(today.getTime() - 30 * 24 * 60 * 60 * 1000);
+            
+            document.getElementById('fromDate').value = oneMonthAgo.toISOString().split('T')[0];
+            document.getElementById('toDate').value = today.toISOString().split('T')[0];
+        }
+
+        function checkExistingLogin() {
+            const savedLogin = localStorage.getItem('weplusPartnerLogin');
+            if (savedLogin) {
+                const loginData = JSON.parse(savedLogin);
+                if (loginData.timestamp && (Date.now() - loginData.timestamp < 24 * 60 * 60 * 1000)) {
+                    currentUser = loginData.username;
+                    showDashboard();
+                    return;
+                }
+            }
+            showLogin();
+        }
+
+        async function handleLogin(e) {
+            e.preventDefault();
+            
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+
+            // Simple authentication (in production, this should be server-side)
+            if (username === 'krufernweplus' && password === 'KrufernWP2025123') {
+                currentUser = username;
+                
+                // Save login state
+                localStorage.setItem('weplusPartnerLogin', JSON.stringify({
+                    username: username,
+                    timestamp: Date.now()
+                }));
+
+                showAlert('Login successful!', 'success');
+                setTimeout(() => {
+                    showDashboard();
+                    loadCommissionData();
+                }, 1000);
+            } else {
+                showAlert('Invalid credentials. Please check your username and password.', 'error');
+            }
+        }
+
+        function showLogin() {
+            document.getElementById('loginSection').classList.remove('hidden');
+            document.getElementById('dashboardSection').classList.add('hidden');
+        }
+
+        function showDashboard() {
+            document.getElementById('loginSection').classList.add('hidden');
+            document.getElementById('dashboardSection').classList.remove('hidden');
+            
+            document.getElementById('welcomeUser').textContent = currentUser;
+            document.getElementById('lastUpdate').textContent = new Date().toLocaleString('th-TH');
+        }
+
+        async function loadCommissionData() {
+            try {
+                showTableLoading(true);
+                
+                // Try to load from API first
+                const response = await fetch(`${API_URL}/api/partner-data/${currentUser}`, {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+                    commissionData = data.records || [];
+                } else {
+                    // Fallback to local storage or sample data
+                    commissionData = getSampleData();
+                }
+
+            } catch (error) {
+                console.error('Error loading commission data:', error);
+                // Use sample data as fallback
+                commissionData = getSampleData();
+            }
+
+            filteredData = [...commissionData];
+            updateDisplay();
+            showTableLoading(false);
+        }
+
+        function getSampleData() {
+            // Sample data for demonstration
+            return [
+                {
+                    orderDate: '2025-08-20',
+                    courseName: 'Digital Marketing Course',
+                    customerPayment: 15000,
+                    affiliate10Recipient: 'krufernweplus',
+                    affiliate10Amount: 1500,
+                    affiliateCode: 'AFF001',
+                    invitor15Recipient: '',
+                    invitor15Amount: 0,
+                    invitorCode: '',
+                    orderNo: 'ORD001'
+                },
+                {
+                    orderDate: '2025-08-19',
+                    courseName: 'Web Development Course',
+                    customerPayment: 25000,
+                    affiliate10Recipient: '',
+                    affiliate10Amount: 0,
+                    affiliateCode: '',
+                    invitor15Recipient: 'krufernweplus',
+                    invitor15Amount: 375,
+                    invitorCode: 'INV001',
+                    orderNo: 'ORD002'
+                }
+            ];
+        }
+
+        function applyFilter() {
+            const fromDate = document.getElementById('fromDate').value;
+            const toDate = document.getElementById('toDate').value;
+
+            filteredData = commissionData.filter(record => {
+                const recordDate = record.orderDate;
+                return (!fromDate || recordDate >= fromDate) && (!toDate || recordDate <= toDate);
+            });
+
+            updateDisplay();
+            showAlert(`Filter applied. Found ${filteredData.length} records.`, 'success');
+        }
+
+        function clearFilter() {
+            setDefaultDates();
+            filteredData = [...commissionData];
+            updateDisplay();
+            showAlert('Filter cleared.', 'success');
+        }
+
+        function updateDisplay() {
+            updateStats();
+            renderTable();
+        }
+
+        function updateStats() {
+            let totalCommission = 0;
+            let affiliate10Total = 0;
+            let invitor15Total = 0;
+
+            filteredData.forEach(record => {
+                if (record.affiliate10Recipient === currentUser) {
+                    affiliate10Total += record.affiliate10Amount;
+                }
+                if (record.invitor15Recipient === currentUser) {
+                    invitor15Total += record.invitor15Amount;
+                }
+            });
+
+            totalCommission = affiliate10Total + invitor15Total;
+
+            document.getElementById('totalCommission').textContent = formatCurrency(totalCommission);
+            document.getElementById('affiliate10').textContent = formatCurrency(affiliate10Total);
+            document.getElementById('invitor15').textContent = formatCurrency(invitor15Total);
+            document.getElementById('totalRecords').textContent = filteredData.length;
+        }
+
+        function renderTable() {
+            const tbody = document.getElementById('commissionTableBody');
+            tbody.innerHTML = '';
+
+            const userRecords = filteredData.filter(record => 
+                record.affiliate10Recipient === currentUser || record.invitor15Recipient === currentUser
+            );
+
+            if (userRecords.length === 0) {
+                document.getElementById('tableContent').classList.add('hidden');
+                document.getElementById('noDataMessage').classList.remove('hidden');
+                return;
+            }
+
+            document.getElementById('tableContent').classList.remove('hidden');
+            document.getElementById('noDataMessage').classList.add('hidden');
+
+            userRecords.forEach(record => {
+                // Add row for affiliate commission if user is recipient
+                if (record.affiliate10Recipient === currentUser && record.affiliate10Amount > 0) {
+                    const row = tbody.insertRow();
+                    row.innerHTML = `
+                        <td>${formatDate(record.orderDate)}</td>
+                        <td>${record.courseName}</td>
+                        <td class="amount">${formatCurrency(record.customerPayment)}</td>
+                        <td><span style="background: #eff6ff; color: #2563eb; padding: 4px 8px; border-radius: 4px; font-size: 0.8rem;">Affiliate 10%</span></td>
+                        <td>${record.affiliateCode}</td>
+                        <td class="amount"><strong>${formatCurrency(record.affiliate10Amount)}</strong></td>
+                        <td>${record.orderNo}</td>
+                    `;
+                }
+
+                // Add row for invitor commission if user is recipient
+                if (record.invitor15Recipient === currentUser && record.invitor15Amount > 0) {
+                    const row = tbody.insertRow();
+                    row.innerHTML = `
+                        <td>${formatDate(record.orderDate)}</td>
+                        <td>${record.courseName}</td>
+                        <td class="amount">${formatCurrency(record.customerPayment)}</td>
+                        <td><span style="background: #f0fdf4; color: #15803d; padding: 4px 8px; border-radius: 4px; font-size: 0.8rem;">Invitor 1.5%</span></td>
+                        <td>${record.invitorCode}</td>
+                        <td class="amount"><strong>${formatCurrency(record.invitor15Amount)}</strong></td>
+                        <td>${record.orderNo}</td>
+                    `;
+                }
+            });
+        }
+
+        function exportCSV() {
+            const userRecords = filteredData.filter(record => 
+                record.affiliate10Recipient === currentUser || record.invitor15Recipient === currentUser
+            );
+
+            if (userRecords.length === 0) {
+                showAlert('No data to export.', 'error');
+                return;
+            }
+
+            let csvContent = "Date,Course Name,Customer Payment,Commission Type,Code,Commission Amount,Order No\n";
+
+            userRecords.forEach(record => {
+                if (record.affiliate10Recipient === currentUser && record.affiliate10Amount > 0) {
+                    csvContent += `${record.orderDate},"${record.courseName}",${record.customerPayment},"Affiliate 10%","${record.affiliateCode}",${record.affiliate10Amount},"${record.orderNo}"\n`;
+                }
+                if (record.invitor15Recipient === currentUser && record.invitor15Amount > 0) {
+                    csvContent += `${record.orderDate},"${record.courseName}",${record.customerPayment},"Invitor 1.5%","${record.invitorCode}",${record.invitor15Amount},"${record.orderNo}"\n`;
+                }
+            });
+
+            const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+            const link = document.createElement('a');
+            const url = URL.createObjectURL(blob);
+            link.setAttribute('href', url);
+            link.setAttribute('download', `weplus_commission_${currentUser}_${new Date().toISOString().split('T')[0]}.csv`);
+            link.style.visibility = 'hidden';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+
+            showAlert('CSV exported successfully!', 'success');
+        }
+
+        function logout() {
+            localStorage.removeItem('weplusPartnerLogin');
+            currentUser = '';
+            commissionData = [];
+            filteredData = [];
+            showLogin();
+            showAlert('Logged out successfully.', 'success');
+        }
+
+        function showTableLoading(show) {
+            document.getElementById('tableLoading').classList.toggle('hidden', !show);
+            document.getElementById('tableContent').classList.toggle('hidden', show);
+            document.getElementById('noDataMessage').classList.add('hidden');
+        }
+
+        function formatCurrency(amount) {
+            return '฿' + Number(amount || 0).toLocaleString('th-TH', {
+                minimumFractionDigits: 0,
+                maximumFractionDigits: 0
+            });
+        }
+
+        function formatDate(dateString) {
+            const date = new Date(dateString);
+            return date.toLocaleDateString('th-TH');
+        }
+
+        function showAlert(message, type) {
+            const existingAlerts = document.querySelectorAll('.alert');
+            existingAlerts.forEach(alert => alert.remove());
+
+            const alert = document.createElement('div');
+            alert.className = `alert alert-${type}`;
+            alert.textContent = message;
+            document.querySelector('.container').insertBefore(alert, document.querySelector('.container').firstChild);
+
+            setTimeout(() => alert.remove(), 4000);
+        }
+
+        console.log('WEPLUS Partner Dashboard initialized');
+    </script>
+</body>
+</html>
